@@ -29,7 +29,7 @@ int main() {
         if(time < p[i].at)
             time = p[i].at;
 
-        p[i].rt = time - p[i].at;   // Response Time
+        p[i].rt = time - p[i].at;
         time += p[i].bt;
 
         p[i].ct = time;
