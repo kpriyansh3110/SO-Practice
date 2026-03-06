@@ -43,7 +43,7 @@ int main() {
         } else {
 
             if(p[min].started == 0) {
-                p[min].rt = time - p[min].at;  // First response
+                p[min].rt = time - p[min].at;
                 p[min].started = 1;
             }
 
