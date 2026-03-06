@@ -39,7 +39,7 @@ int main() {
         if(min == -1) {
             time++;
         } else {
-            p[min].rt = time - p[min].at;   // Response Time
+            p[min].rt = time - p[min].at;
             time += p[min].bt;
 
             p[min].ct = time;
