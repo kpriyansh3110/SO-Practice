@@ -1,0 +1,77 @@
+#include <stdio.h>
+
+int main() {
+    int n, tq;
+    
+    printf("Enter number of processes: ");
+    scanf("%d", &n);
+
+    int at[n], bt[n], rt[n], ct[n], tat[n], wt[n], res[n];
+    int rem_bt[n];
+    
+    for(int i=0;i<n;i++){
+        printf("\nProcess %d Arrival Time: ", i+1);
+        scanf("%d",&at[i]);
+
+        printf("Process %d Burst Time: ", i+1);
+        scanf("%d",&bt[i]);
+
+        rem_bt[i] = bt[i];
+        rt[i] = -1;
+    }
+
+    printf("\nEnter Time Quantum: ");
+    scanf("%d",&tq);
+
+    int time = 0, completed = 0;
+
+    while(completed < n){
+        int done = 1;
+
+        for(int i=0;i<n;i++){
+            if(rem_bt[i] > 0 && at[i] <= time){
+                done = 0;
+
+                if(rt[i] == -1)
+                    rt[i] = time - at[i];
+
+                if(rem_bt[i] > tq){
+                    time += tq;
+                    rem_bt[i] -= tq;
+                }
+                else{
+                    time += rem_bt[i];
+                    ct[i] = time;
+                    rem_bt[i] = 0;
+                    completed++;
+                }
+            }
+        }
+
+        if(done)
+            time++;
+    }
+
+    float avg_tat=0, avg_wt=0, avg_rt=0;
+
+    printf("\nP\tAT\tBT\tCT\tTAT\tWT\tRT\n");
+
+    for(int i=0;i<n;i++){
+        tat[i] = ct[i] - at[i];
+        wt[i] = tat[i] - bt[i];
+        res[i] = rt[i];
+
+        avg_tat += tat[i];
+        avg_wt += wt[i];
+        avg_rt += res[i];
+
+        printf("P%d\t%d\t%d\t%d\t%d\t%d\t%d\n",
+               i+1, at[i], bt[i], ct[i], tat[i], wt[i], res[i]);
+    }
+
+    printf("\nAverage TAT = %.2f", avg_tat/n);
+    printf("\nAverage WT = %.2f", avg_wt/n);
+    printf("\nAverage RT = %.2f\n", avg_rt/n);
+
+    return 0;
+}
