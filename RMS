@@ -1,0 +1,103 @@
+#include <stdio.h>
+
+int gcd(int a, int b) {
+    while (b != 0) {
+        int temp = b;
+        b = a % b;
+        a = temp;
+    }
+    return a;
+}
+
+int lcm(int a, int b) {
+    return (a * b) / gcd(a, b);
+}
+
+int lcm_array(int arr[], int n) {
+    int result = arr[0];
+    for (int i = 1; i < n; i++) {
+        result = lcm(result, arr[i]);
+    }
+    return result;
+}
+
+void rms(int n, int C[], int P[]) {
+    int i, j;
+
+    int index[n];
+    for (i = 0; i < n; i++) index[i] = i;
+
+    for (i = 0; i < n - 1; i++) {
+        for (j = i + 1; j < n; j++) {
+            if (P[index[i]] > P[index[j]]) {
+                int temp = index[i];
+                index[i] = index[j];
+                index[j] = temp;
+            }
+        }
+    }
+
+    int periods[n];
+    for (i = 0; i < n; i++) {
+        periods[i] = P[index[i]];
+    }
+
+    int hyperperiod = lcm_array(periods, n);
+
+    
+    printf("\nLCM (Hyperperiod) = %d\n", hyperperiod);
+
+    int remaining[n];
+    for (i = 0; i < n; i++) remaining[i] = 0;
+
+    printf("\nSchedule Timeline:\n");
+
+ 
+    for (int time = 0; time < hyperperiod; time++) {
+
+   
+        for (i = 0; i < n; i++) {
+            if (time % P[index[i]] == 0) {
+                remaining[i] = C[index[i]];
+            }
+        }
+
+        int task_to_run = -1;
+        for (i = 0; i < n; i++) {
+            if (remaining[i] > 0) {
+                task_to_run = i;
+                break;
+            }
+        }
+
+   
+        if (task_to_run != -1) {
+            printf("Time %d: T%d\n", time, index[task_to_run]);
+            remaining[task_to_run]--;
+        } else {
+            printf("Time %d: Idle\n", time);
+        }
+    }
+}
+
+
+int main() {
+    int n;
+
+    printf("Enter number of tasks: ");
+    scanf("%d", &n);
+
+    int C[n], P[n];
+
+    for (int i = 0; i < n; i++) {
+        printf("Enter computation time (C%d): ", i+1);
+        scanf("%d", &C[i]);
+
+        printf("Enter period (P%d): ", i+1);
+        scanf("%d", &P[i]);
+    }
+
+    rms(n, C, P);
+
+    return 0;
+}
